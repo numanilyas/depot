@@ -1,5 +1,8 @@
 class Product < ActiveRecord::Base
   default_scope :order => 'title'
+  has_many :line_items
+  has_many :orders, :through => :line_items
+  before_destroy :ensure_not_referenced_by_any_line_item
   attr_accessible :description, :image_url, :price, :title
   validates :description, :image_url, :presence => true
   validates :title, :presence => {:message => "Custom title can not be blank"}
@@ -9,4 +12,14 @@ class Product < ActiveRecord::Base
     :with => %r{\.(gif|jpg|png)$}i,
     :message => "must be a URL for GIF, JPG or PNG image."
   }
+  
+  private
+  def ensure_not_referenced_by_any_line_item
+    if line_items.empty?
+      return true
+    else
+      errors.add(:base, 'Line Items Present')
+      return false
+    end
+  end 
 end

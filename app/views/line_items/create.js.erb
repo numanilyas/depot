@@ -1,0 +1,9 @@
+$('#notice').hide();
+$('#cart').html("<%= escape_javascript(render(@cart))%>");
+if ($('#cart').attr("style") == "display:none") {
+    $('#cart').attr("style", "");
+    $('#cart').slideDown("slow");
+} else {  
+  $('#current_item').toggle('highlight');
+  $('#current_item').toggle('highlight');
+}
